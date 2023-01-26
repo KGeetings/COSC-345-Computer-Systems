@@ -12,8 +12,8 @@ RUN adduser -D cosc345
 RUN echo 'cosc345:alpine' | chpasswd
 COPY . /home/cosc345
 WORKDIR /home/cosc345
-RUN cd /home/cosc345
-RUN gcc -o counter counter.c
+#RUN cd /home/cosc345
+RUN gcc -o message message.c
 
 
 #USER cosc345
