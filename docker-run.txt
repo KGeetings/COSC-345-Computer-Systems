@@ -1,0 +1,3 @@
+cd E:\VSCode\COSC-345-Computer-Systems\docker03
+docker build -t docker03 .
+docker run -it docker03
