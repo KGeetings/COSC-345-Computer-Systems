@@ -1,0 +1,5 @@
+Computer hardware will check when overflow occurs, but do programming languages check for this?  In this assignment you will write a C program and a Python program that does an operation that results in an overflow.
+
+Programming langauges do not check for this, it is up to the programmer to handle these situations and check for overflow.
+In the case of Python, the behavior of integer overflow is platform dependent. In Python3, the int class
+has no upper limit. In C, we can see the overflow occur.
