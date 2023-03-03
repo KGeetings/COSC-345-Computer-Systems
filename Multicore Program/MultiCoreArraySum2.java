@@ -96,4 +96,4 @@ public class MultiCoreArraySum2 {
 
 3. If you are able, run your code on a different computer that has a different number of cores. Do your results from the first experiment change at all?
     The results from the first experiment do not change. I attempted this on my laptop with 8 cores, on my desktop with 16 cores.
- */
+*/
