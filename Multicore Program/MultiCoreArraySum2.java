@@ -14,7 +14,7 @@ public class MultiCoreArraySum2 {
     @SuppressWarnings("unchecked")
     public MultiCoreArraySum2(int[] arr) {
         this.arr = arr;
-        this.numCores = Runtime.getRuntime().availableProcessors();
+        MultiCoreArraySum2.numCores = Runtime.getRuntime().availableProcessors();
         this.threadPool = Executors.newWorkStealingPool();
         this.futures = new Future[numCores];
     }
@@ -85,3 +85,15 @@ public class MultiCoreArraySum2 {
         System.out.println("Time taken: " + (end - start) + " ms");
     }
 }
+
+// Responses
+/* 
+1. Start with a fairly small array – say 1000 int values. This will likely be faster in the single process version. Keep increasing the size of the array – can you determine a point where the multiprocessor approach becomes faster?
+    The multicore approach becomes faster when the array size is greater than 100000000.
+
+2. Try generating more tasks than the number of available processors. Is this code slower or faster than when you match the number of tasks to the number of processors?
+    The code is slower when the number of tasks is greater than the number of processors, but the difference isn't a lot.
+
+3. If you are able, run your code on a different computer that has a different number of cores. Do your results from the first experiment change at all?
+    The results from the first experiment do not change. I attempted this on my laptop with 8 cores, on my desktop with 16 cores.
+ */

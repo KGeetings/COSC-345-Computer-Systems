@@ -18,8 +18,6 @@ import java.util.concurrent.Future;
  */
 public class MultiCoreArraySum {
 
-    private static int[] array = new int[100000000];
-
     public MultiCoreArraySum(int[] array) throws ExecutionException, InterruptedException {
 
         int cores = Runtime.getRuntime().availableProcessors();
@@ -58,6 +56,10 @@ public class MultiCoreArraySum {
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
+        /* Your main method should create the array and randomly generate the values for the array. 
+        It should then pass that array to an object that is created to handle the computation. */
+        int[] array = new int[10000000];
+
         Random rand = new Random();
         for (int i = 0; i < array.length; i++) {
             array[i] = rand.nextInt(100);
