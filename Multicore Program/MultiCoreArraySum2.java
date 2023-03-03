@@ -7,10 +7,11 @@ import java.util.concurrent.Future;
 public class MultiCoreArraySum2 {
 
     private int[] arr;
-    private int numCores;
+    private static int numCores;
     private ExecutorService threadPool;
     private Future<Integer>[] futures;
 
+    @SuppressWarnings("unchecked")
     public MultiCoreArraySum2(int[] arr) {
         this.arr = arr;
         this.numCores = Runtime.getRuntime().availableProcessors();
@@ -56,7 +57,7 @@ public class MultiCoreArraySum2 {
     }
 
     public static void main(String[] args) {
-        int[] arr = new int[1000];
+        int[] arr = new int[100000000];
         Random rand = new Random();
         for (int i = 0; i < arr.length; i++) {
             arr[i] = rand.nextInt(100);
@@ -67,6 +68,18 @@ public class MultiCoreArraySum2 {
         long start = System.currentTimeMillis();
         int totalSum = sum.sum();
         long end = System.currentTimeMillis();
+
+        System.out.println("Number of cores: " + numCores);
+        System.out.println("Total sum: " + totalSum);
+        System.out.println("Time taken: " + (end - start) + " ms");
+
+        // Now do the same thing without using multicore
+        start = System.currentTimeMillis();
+        totalSum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            totalSum += arr[i];
+        }
+        end = System.currentTimeMillis();
 
         System.out.println("Total sum: " + totalSum);
         System.out.println("Time taken: " + (end - start) + " ms");

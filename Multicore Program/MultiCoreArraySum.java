@@ -1,87 +1,85 @@
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-/* 
- * Using the example program that was presented, write a Java program that will use multiple
-    cores to add the elements of an array of int values.
- * Your main method should create the array and randomly generate the values for the array.
-    It should then pass that array to an object that is created to handle the computation.
- * Classes you will create: 
-    • The class that handles the computation will be similar to the Multicore class in the 
-    example.  This class should retrieve the sums from the Future’s and add those together 
-    to get the overall sum.  You can do most of the computation in the constructor method 
-    the way my example does, or you can not have the constructor do much and put the 
-    code in a method that you call in main after creating the instance of this class. 
-    • You will also need to create a class similar to the Compute class that implements the 
-    Callable interface.  This class should use it’s ID, the number of processors involved, and 
-    the size of the array to determine which part of the array it is supposed to sum.   The 
-    call method of this class should return its sum 
-*/
-
+/**
+ * Multicore Processor Example in Java to use all available processor cores
+ * to average lists of random numbers.
+ * Uses the Java 8's Executor service for a Work Stealing Pool to divvy the
+ * work onto the available processor cores.
+ * Example was run on a 8 Core 2.6 GHz Intel i7 with 16GB of 2133 LPDDR3
+ * which takes around 14 seconds;
+ */
 public class MultiCoreArraySum {
 
-    private int base;
+    private static int[] array = new int[100000000];
 
-    public MultiCoreArraySum() throws ExecutionException, InterruptedException {
-        base = 4;
+    public MultiCoreArraySum(int[] array) throws ExecutionException, InterruptedException {
 
         int cores = Runtime.getRuntime().availableProcessors();
+        // int numWorkers = 100;
         System.out.println("Available processor cores is " + cores);
 
         Instant now = Instant.now();
         ExecutorService threadPool = Executors.newWorkStealingPool();
-        
-        List<Future<Integer>> futures = new ArrayList<>(cores);
+
+        LinkedList<Future<Integer>> futures = new LinkedList<Future<Integer>>();
 
         for (int i = 0; i < cores; i++) {
-            futures.add(i, threadPool.submit(new Compute(i)));
+            futures.add(i, threadPool.submit(new Compute(i, array)));
         }
 
         int total = 0;
         for (int i = 0; i < cores; i++) {
             total += futures.get(i).get();
         }
+
         System.out.println("Total: " + total);
 
         Duration d = Duration.between(now, Instant.now());
         System.out.println("Time Taken multi-core:  " + d); // Total time taken
 
+        // Same computation without cores
         now = Instant.now();
+        System.out.println("No multicore");
         total = 0;
-        for (int i = 0; i < cores * base; i++) {
-            total += i;
+        for (int i = 0; i < array.length; i++) {
+            total += array[i];
         }
-        System.out.println("Total: " + total);
+        System.out.println(total);
         d = Duration.between(now, Instant.now());
-        System.out.println("Time Taken single-core: " + d); // Total time taken
+        System.out.println("Time Taken:  " + d);
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        new MultiCoreArraySum();
+        Random rand = new Random();
+        for (int i = 0; i < array.length; i++) {
+            array[i] = rand.nextInt(100);
+        }
+
+        new MultiCoreArraySum(array);
     }
 
     private class Compute implements Callable<Integer> {
         private int id;
 
-        public Compute(int id) {
+        public Compute(int id, int[] array) {
             this.id = id;
         }
 
         @Override
-        public Integer call() throws Exception {
+        public Integer call() {
             System.out.println("Id: " + id);
             int sum = 0;
-            for (int i = id * base; i < (id + 1) * base; i++) {
-                sum += i;
+            for (int i = 0; i < array.length; i++) {
+                sum += array[i];
             }
-            System.out.println("Id: " + id + " n: " + sum);
             return sum;
         }
     }

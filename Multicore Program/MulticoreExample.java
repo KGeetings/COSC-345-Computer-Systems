@@ -63,7 +63,7 @@ public class MulticoreExample {
    }
 
    public static void main(String[] args) throws ExecutionException, InterruptedException {
-      MulticoreExample me = new MulticoreExample();
+      new MulticoreExample();
    }
 
    private class Compute implements Callable<Integer> {
